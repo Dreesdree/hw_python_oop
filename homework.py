@@ -89,9 +89,10 @@ class SportsWalking(Training):
         self.height = height
 
     def get_spent_calories(self):
-        callories_wlk = ((self.CF_1 * self.weight +
-                          (self.get_mean_speed() ** 2 // self.height)
-                          * self.CF_2 * self.weight) * self.duration * self.MIN_IN_H)
+        callories_wlk = ((self.CF_1 * self.weight
+                          + (self.get_mean_speed() ** 2 // self.height)
+                          * self.CF_2 * self.weight) * self.duration
+                         * self.MIN_IN_H)
         return callories_wlk
 
 
