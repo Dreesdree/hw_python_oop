@@ -13,7 +13,6 @@ class InfoMessage:
         self.speed = speed
         self.calories = calories
 
-    # Выводим сообщение о треннировке
     def get_message(self) -> str:
         return (f'Тип тренировки: {self.training_type}; '
                 f'Длительность: {self.duration:.3f} ч.; '
@@ -24,8 +23,8 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-    M_IN_KM = 1000  # Переменная для перевода расстояния м. в км.
-    LEN_STEP = 0.65  # Расстояние за один шаг
+    M_IN_KM = 1000
+    LEN_STEP = 0.65
 
     def __init__(self,
                  action: int,
@@ -38,13 +37,11 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        distance = self.action * self.LEN_STEP / self.M_IN_KM
-        return distance
+        return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        speed = self.get_distance() / self.duration
-        return speed
+        return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -61,23 +58,20 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-
-    MIN_IN_H = 60  # переменная для перевода ч. в мин.
+    MIN_IN_H = 60
+    COEF_1 = 18
+    COEF_2 = 20
 
     def get_spent_calories(self) -> float:
-        cf_1 = 18  # коэффициент №1 для подсчета коллорий
-        cf_2 = 20  # коэффициент №2 для подсчета коллорий
-        callories_run = ((cf_1 * self.get_mean_speed() - cf_2)
-                         * self.weight / self.M_IN_KM
-                         * self.duration * self.MIN_IN_H)
-        return callories_run
-
+        return ((self.COEF_1 * self.get_mean_speed() - self.COEF_2)
+                * self.weight / self.M_IN_KM
+                * self.duration * self.MIN_IN_H)
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    CF_1 = 0.035  # коэффициент №1
-    CF_2 = 0.029  # коэффициент №2
-    MIN_IN_H = 60  # переменная для перевода ч. в мин.
+    COEF_1 = 0.035
+    COEF_2 = 0.029
+    MIN_IN_H = 60
 
     def __init__(self,
                  action: int,
@@ -89,17 +83,16 @@ class SportsWalking(Training):
         self.height = height
 
     def get_spent_calories(self):
-        callories_wlk = ((self.CF_1 * self.weight
-                          + (self.get_mean_speed() ** 2 // self.height)
-                          * self.CF_2 * self.weight) * self.duration
-                         * self.MIN_IN_H)
-        return callories_wlk
+        return ((self.COEF_1 * self.weight
+                 + (self.get_mean_speed() ** 2 // self.height)
+                 * self.COEF_2 * self.weight) * self.duration
+                 * self.MIN_IN_H)
 
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    LEN_STEP = 1.38  # Растояние за один гребок
-    CF_1 = 1.1
+    LEN_STEP = 1.38
+    COEF_1 = 1.1
 
     def __init__(self,
                  action: int,
@@ -113,19 +106,19 @@ class Swimming(Training):
         self.count_pool = count_pool
 
     def get_mean_speed(self) -> float:
-        speed_swm = (self.length_pool * self.count_pool
-                     / self.M_IN_KM / self.duration)
-        return speed_swm
+        return (self.length_pool * self.count_pool
+                / self.M_IN_KM / self.duration)
 
     def get_spent_calories(self) -> float:
-        calories_swm = (self.get_mean_speed() + self.CF_1) * 2 * self.weight
-        return calories_swm
+        return (self.get_mean_speed() + self.COEF_1) * 2 * self.weight
 
+trainings: dict = {'RUN': Running, 'WLK': SportsWalking, 'SWM': Swimming}
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    trainings: dict = {'RUN': Running, 'WLK': SportsWalking, 'SWM': Swimming}
-    return trainings[workout_type](*data)
+    if workout_type in trainings:
+        type = trainings[workout_type](*data)
+    return type
 
 
 def main(training: Training) -> None:
