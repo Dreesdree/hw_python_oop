@@ -67,6 +67,7 @@ class Running(Training):
                 * self.weight / self.M_IN_KM
                 * self.duration * self.MIN_IN_H)
 
+
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     COEF_1 = 0.035
@@ -86,7 +87,7 @@ class SportsWalking(Training):
         return ((self.COEF_1 * self.weight
                  + (self.get_mean_speed() ** 2 // self.height)
                  * self.COEF_2 * self.weight) * self.duration
-                 * self.MIN_IN_H)
+                * self.MIN_IN_H)
 
 
 class Swimming(Training):
@@ -112,7 +113,9 @@ class Swimming(Training):
     def get_spent_calories(self) -> float:
         return (self.get_mean_speed() + self.COEF_1) * 2 * self.weight
 
+
 trainings: dict = {'RUN': Running, 'WLK': SportsWalking, 'SWM': Swimming}
+
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
