@@ -112,8 +112,8 @@ class Swimming(Training):
                 / self.M_IN_KM / self.duration)
 
     def get_spent_calories(self) -> float:
-        return (self.get_mean_speed() + self.COEF_CALORIE_1) \
-               * 2 * self.weight
+        return ((self.get_mean_speed() + self.COEF_CALORIE_1)
+                * 2 * self.weight)
 
 
 Trainings: dict = {'RUN': Running, 'WLK': SportsWalking, 'SWM': Swimming}
